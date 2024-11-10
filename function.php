@@ -27,12 +27,12 @@ function validateLoginCredentials($email, $password) {
     return false; 
 }
 
-// Check if the login credentials match any of the users
+
 function checkLoginCredentials($email, $password) {
     return validateLoginCredentials($email, $password);
 }
 
-// Check if the user session is active (already logged in)
+
 function checkUserSessionIsActive() {
     return isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
 }
@@ -98,3 +98,26 @@ function addSubject($subjectCode, $subjectName) {
         }
     }
 }
+?>
+<?php
+
+function updateSubject($editIndex, $subjectCode, $subjectName) {
+
+    if (isset($_SESSION['subjects'][$editIndex])) {
+        $_SESSION['subjects'][$editIndex] = [
+            'subjectCode' => $subjectCode,
+            'subjectName' => $subjectName
+        ];
+
+        header("Location: subject.php");
+        exit();
+    }
+}
+
+function getSubjectForEdit($editIndex) {
+    if (isset($_SESSION['subjects'][$editIndex])) {
+        return $_SESSION['subjects'][$editIndex];
+    }
+
+}
+?>
