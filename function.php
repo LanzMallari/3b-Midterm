@@ -1,5 +1,5 @@
 <?php
-
+//LOGIN FUNCTION
 function startSessionIfNotStarted() {
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
@@ -12,7 +12,8 @@ function getUsers() {
         ["email" => "example@gmail.com", "password" => "example"],
         ["email" => "example1@gmail.com", "password" => "example1"],
         ["email" => "example2@gmail.com", "password" => "example2"],
-        ["email" => "example3@gmail.com", "password" => "example13"]
+        ["email" => "example3@gmail.com", "password" => "example13"],
+        ["email" => "example3@gmail.com", "password" => "example14"]
     ];
 }
 
@@ -54,70 +55,75 @@ function get_user_email() {
     return isset($_SESSION['email']) ? $_SESSION['email'] : 'Guest';
 }
 ?>
+
 <?php
-// Start the session
+// SUBJECT FUNCTION
 session_start();
 $error = "";
 
 
 function addSubject($subjectCode, $subjectName) {
-    global $error;
-
-
     if (empty($subjectCode) || empty($subjectName)) {
-        $error = "<b>System Errors</b> <br> <li>Subject Code is required!</li><li> Subject Name is required!</li>";
-    } elseif (empty($subjectCode)) {
-        $error = "<b>System Errors</b> <br> <li>Subject Code is required!</li>";
-    } elseif (empty($subjectName)) {
-        $error = "<b>System Errors</b> <br> <li>Subject Name is required!</li>";
-    } else {
+        return "<b>System Errors</b> <br> <li>Subject Code is required!</li><li>Subject Name is required!</li>";
+    }
 
-        $duplicate = false;
-        if (!empty($_SESSION['subjects'])) {
-            foreach ($_SESSION['subjects'] as $subject) {
-                if ($subject['subjectCode'] == $subjectCode || strtolower($subject['subjectName']) == strtolower($subjectName)) {
-                    $duplicate = true;
-                    break;
-                }
+    if (!empty($_SESSION['subjects'])) {
+        foreach ($_SESSION['subjects'] as $subject) {
+            if ($subject['subjectCode'] == $subjectCode || strtolower($subject['subjectName']) == strtolower($subjectName)) {
+                return "<b>System Errors</b> <br> <li>Duplicate Subject!</li>";
             }
-        }
-
-        if ($duplicate) {
-            $error = "<b>System Errors</b> <br> <li>Duplicate Subject!</li>";
-        } else {
-    
-            if (!isset($_SESSION['subjects'])) {
-                $_SESSION['subjects'] = [];
-            }
-            $_SESSION['subjects'][] = [
-                'subjectCode' => $subjectCode,
-                'subjectName' => $subjectName
-            ];
-
-            
         }
     }
+
+    $_SESSION['subjects'][] = [
+        'subjectCode' => $subjectCode,
+        'subjectName' => $subjectName
+    ];
+    return "Subject added successfully!";
+   
 }
-?>
-<?php
 
 function updateSubject($editIndex, $subjectCode, $subjectName) {
 
+
+    
     if (isset($_SESSION['subjects'][$editIndex])) {
         $_SESSION['subjects'][$editIndex] = [
             'subjectCode' => $subjectCode,
             'subjectName' => $subjectName
         ];
+      
+        
 
         header("Location: subject.php");
         exit();
     }
 }
-
 function getSubjectForEdit($editIndex) {
     if (isset($_SESSION['subjects'][$editIndex])) {
         return $_SESSION['subjects'][$editIndex];
     }
+    return null;
+}
+function deleteSubject($index) {
+    if (isset($_SESSION['subjects'][$index])) {
+        unset($_SESSION['subjects'][$index]);
+        $_SESSION['subjects'] = array_values($_SESSION['subjects']); // Re-index the array
+        return "Subject deleted successfully!";
+    } else {
+        return "Error: Subject not found!";
+    }
+}
+function getSubject($index) {
+    return $_SESSION['subjects'][$index] ?? null;
+}
 
+function deleteSubjectByIndex($index) {
+    if (isset($_SESSION['subjects'][$index])) {
+        unset($_SESSION['subjects'][$index]);
+        $_SESSION['subjects'] = array_values($_SESSION['subjects']); 
+       
+    }
+  
 }
 ?>
