@@ -1,5 +1,5 @@
 <?php
-// Start the session if it's not already started
+
 function startSessionIfNotStarted() {
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
@@ -16,15 +16,15 @@ function getUsers() {
     ];
 }
 
-// Validate login credentials
+
 function validateLoginCredentials($email, $password) {
     $users = getUsers();
     foreach ($users as $user) {
         if ($user["email"] == $email && $user["password"] == $password) {
-            return true; // Credentials are valid
+            return true;
         }
     }
-    return false; // Invalid credentials
+    return false; 
 }
 
 // Check if the login credentials match any of the users
@@ -40,18 +40,61 @@ function checkUserSessionIsActive() {
 
 
 <?php
-// Start session and check if the user is logged in
+
 function check_login() {
-    session_start();
+    
     // Check if the user is logged in
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-        header("Location: index.php"); // Redirect to login page if not logged in
+        header("Location: index.php");
         exit;
     }
 }
 
-// Retrieve the user email from the session
 function get_user_email() {
     return isset($_SESSION['email']) ? $_SESSION['email'] : 'Guest';
 }
 ?>
+<?php
+// Start the session
+session_start();
+$error = "";
+
+
+function addSubject($subjectCode, $subjectName) {
+    global $error;
+
+
+    if (empty($subjectCode) || empty($subjectName)) {
+        $error = "<b>System Errors</b> <br> <li>Subject Code is required!</li><li> Subject Name is required!</li>";
+    } elseif (empty($subjectCode)) {
+        $error = "<b>System Errors</b> <br> <li>Subject Code is required!</li>";
+    } elseif (empty($subjectName)) {
+        $error = "<b>System Errors</b> <br> <li>Subject Name is required!</li>";
+    } else {
+
+        $duplicate = false;
+        if (!empty($_SESSION['subjects'])) {
+            foreach ($_SESSION['subjects'] as $subject) {
+                if ($subject['subjectCode'] == $subjectCode || strtolower($subject['subjectName']) == strtolower($subjectName)) {
+                    $duplicate = true;
+                    break;
+                }
+            }
+        }
+
+        if ($duplicate) {
+            $error = "<b>System Errors</b> <br> <li>Duplicate Subject!</li>";
+        } else {
+    
+            if (!isset($_SESSION['subjects'])) {
+                $_SESSION['subjects'] = [];
+            }
+            $_SESSION['subjects'][] = [
+                'subjectCode' => $subjectCode,
+                'subjectName' => $subjectName
+            ];
+
+            
+        }
+    }
+}

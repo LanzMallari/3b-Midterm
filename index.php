@@ -1,14 +1,14 @@
 <?php
-// Include the functions file
+
 include('function.php');
 
-// Start session if not already started
+
 startSessionIfNotStarted();
 
-// Initialize error message
+
 $error_message = "";
 
-// Check if form is submitted
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form inputs
     $email = trim($_POST['email']);
@@ -28,9 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if login credentials are valid
     elseif (checkLoginCredentials($email, $password)) {
         $_SESSION['loggedin'] = true;
-        $_SESSION['email'] = $email; // Store email in session
-        header("Location: dashboard.php"); // Redirect to dashboard.php
-        exit;
+        $_SESSION['email'] = $email; 
+        header("Location: dashboard.php"); 
     } else {
         $error_message = "<ul><li>Invalid email or password</li></ul>";
     }
