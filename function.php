@@ -12,7 +12,7 @@ function getUsers() {
         ["email" => "example@gmail.com", "password" => "example"],
         ["email" => "example1@gmail.com", "password" => "example1"],
         ["email" => "example2@gmail.com", "password" => "example2"],
-        ["email" => "example3@gmail.com", "password" => "example13"]
+        ["email" => "example3@gmail.com", "password" => "example13"],
         ["email" => "example3@gmail.com", "password" => "example14"]
     ];
 }
