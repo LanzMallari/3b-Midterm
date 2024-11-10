@@ -1,3 +1,24 @@
+<?php
+// Include the functions file
+include('function.php');
+
+// Initialize error and success messages
+$error = "";
+$success = "";
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Call the function to add a subject
+    addSubject($_POST["subjectCode"], $_POST["subjectName"]);
+}
+
+// Handle delete functionality
+if (isset($_GET['delete'])) {
+    $deleteIndex = $_GET['delete'];
+    deleteSubject($deleteIndex);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,6 +172,9 @@
     </ol>
 </nav>
 
+<?php if (!empty($error)): ?>
+    <div class="error-box"><?php echo $error; ?></div>
+<?php endif; ?>
 
 
 <div class="container">
@@ -189,8 +213,8 @@
                             <td><?php echo $subject['subjectCode']; ?></td>
                             <td><?php echo $subject['subjectName']; ?></td>
                             <td class="action-buttons">
-                                <a href="edit.php?edit=<?php echo $index; ?>&subjectCode=<?php echo urlencode($subject['subjectCode']); ?>&subjectName=<?php echo urlencode($subject['subjectName']); ?>">Edit</a>
-                                <a href="?delete=<?php echo $index; ?>" class="delete">Delete</a>
+                                <a >Edit</a>
+                                <a  class="delete">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
