@@ -1,9 +1,48 @@
+<?php
+// Include the functions file
+include('function.php');
+
+// Start session if not already started
+startSessionIfNotStarted();
+
+// Initialize error message
+$error_message = "";
+
+// Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get form inputs
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+
+    // Validate credentials
+    if (empty($email) || empty($password)) {
+        $error_message = "<ul>";
+        if (empty($email)) {
+            $error_message .= "<li>Email is required</li>";
+        }
+        if (empty($password)) {
+            $error_message .= "<li>Password is required</li>";
+        }
+        $error_message .= "</ul>";
+    } 
+    // Check if login credentials are valid
+    elseif (checkLoginCredentials($email, $password)) {
+        $_SESSION['loggedin'] = true;
+        $_SESSION['email'] = $email; // Store email in session
+        header("Location: dashboard.php"); // Redirect to dashboard.php
+        exit;
+    } else {
+        $error_message = "<ul><li>Invalid email or password</li></ul>";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,13 +125,18 @@
             background-color: #0056b3;
         }
     </style>
-
-
-
-    
 </head>
 <body>
-<div class="container">
+
+    <?php if ($error_message): ?>
+        <div class="error-box">
+            <button class="close-btn" onclick="closeErrorBox()">×</button>
+            <strong>System Errors</strong>
+            <?php echo $error_message; ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="container">
         <h2>Login</h2>
         <form method="post" action="">
             <div class="form-group">
@@ -106,5 +150,12 @@
             <button type="submit" class="login-btn">Login</button>
         </form>
     </div>
+
+    <script>
+        function closeErrorBox() {
+            document.querySelector('.error-box').style.display = 'none';
+        }
+    </script>
+
 </body>
 </html>
