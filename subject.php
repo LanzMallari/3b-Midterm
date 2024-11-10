@@ -1,21 +1,30 @@
+
 <?php
-
-include('function.php');
-
+include 'function.php';
 
 $error = "";
+$success = "";
 
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    addSubject($_POST["subjectCode"], $_POST["subjectName"]);
+// Handle deletion of the subject
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['deleteSubject'])) {
+    $index = $_POST['deleteSubject'];
+    $success = deleteSubject($index);
 }
 
 
-if (isset($_GET['delete'])) {
-    $deleteIndex = $_GET['delete'];
-    deleteSubject($deleteIndex);
+
+// Check if the form is submitted to add a new subject
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['deleteSubject'])) {
+    $subjectCode = $_POST["subjectCode"] ?? '';
+    $subjectName = $_POST["subjectName"] ?? '';
+    $result = addSubject($subjectCode, $subjectName);
+    if (strpos($result, "successfully")) {
+        $success = $result;
+    } else {
+        $error = $result;
+    }
+
+   
 }
 ?>
 
@@ -95,13 +104,15 @@ if (isset($_GET['delete'])) {
         }
 
         .form-group button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
+    width: 20%;          
+    padding: 15px;      
+    font-size: 16px;   
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
 
         .form-group button:hover {
             background-color: #0056b3;
@@ -175,10 +186,11 @@ if (isset($_GET['delete'])) {
 <?php if (!empty($error)): ?>
     <div class="error-box"><?php echo $error; ?></div>
 <?php endif; ?>
-
+<?php if (!empty($success)): ?>
+    <div class="error-box" style="background-color: #d4edda; color: #155724;"><?php echo $success; ?></div>
+<?php endif; ?>
 
 <div class="container">
- 
     <form action="" method="POST">
         <div class="form-group">
             <label for="subjectCode">Subject Code</label>
@@ -213,25 +225,20 @@ if (isset($_GET['delete'])) {
                             <td><?php echo $subject['subjectCode']; ?></td>
                             <td><?php echo $subject['subjectName']; ?></td>
                             <td class="action-buttons">
-                            <a href="edit.php?edit=<?php echo $index; ?>&subjectCode=<?php echo urlencode($subject['subjectCode']); ?>&subjectName=<?php echo urlencode($subject['subjectName']); ?>">Edit</a>
-                            <a class="delete">Delete</a>
+                                <a href="edit.php?edit=<?php echo $index; ?>&subjectCode=<?php echo urlencode($subject['subjectCode']); ?>&subjectName=<?php echo urlencode($subject['subjectName']); ?>">Edit</a>
+                                <a href="delete.php?delete=<?php echo $index; ?>" class="delete">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="3" class="no-subjects">No subjects found.</td>
+                        <td colspan="3">No subjects found.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
-
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 </body>
 </html>
