@@ -1,9 +1,34 @@
+<?php
+
+include('function.php');
+
+
+
+if (isset($_GET['edit'])) {
+    $editIndex = $_GET['edit'];
+    $subject = getSubjectForEdit($editIndex);
+
+    if ($subject) {
+        $subjectCode = $subject['subjectCode'];
+        $subjectName = $subject['subjectName'];
+    } 
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    if (isset($_POST['subjectCode']) && isset($_POST['subjectName'])) {
+        updateSubject($editIndex, $_POST['subjectCode'], $_POST['subjectName']);
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit page</title>
+    <title>Edit Subject</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -126,19 +151,18 @@
 
 <fieldset style="width: 60%; height: 140px;">
     <form action="" method="POST">
-        <!-- Container for Subject Code -->
+     
         <div class="form-group">
             <label for="subjectCode">Subject Id</label>
-            <input type="text"  readonly style="background-color: #e9ecef; color: #6c757d;">
+            <input type="text" id="subjectCode" name="subjectCode" class="form-control" value="<?php echo $subjectCode; ?>" readonly style="background-color: #e9ecef; color: #6c757d;">
         </div>
 
-        <!-- Container for Subject Name -->
+ 
         <div class="form-group">
             <label for="subjectName">Subject Name</label>
-            <input type="text"  required>
+            <input type="text" id="subjectName" name="subjectName" class="form-control" value="<?php echo $subjectName; ?>" required>
         </div>
 
-        <!-- Container for Update Button -->
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Update Subject</button>
         </div>

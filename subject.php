@@ -1,18 +1,18 @@
 <?php
-// Include the functions file
+
 include('function.php');
 
-// Initialize error and success messages
-$error = "";
-$success = "";
 
-// Check if the form is submitted
+$error = "";
+
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Call the function to add a subject
+
     addSubject($_POST["subjectCode"], $_POST["subjectName"]);
 }
 
-// Handle delete functionality
+
 if (isset($_GET['delete'])) {
     $deleteIndex = $_GET['delete'];
     deleteSubject($deleteIndex);
@@ -178,7 +178,7 @@ if (isset($_GET['delete'])) {
 
 
 <div class="container">
-    <!-- Form for adding new subject -->
+ 
     <form action="" method="POST">
         <div class="form-group">
             <label for="subjectCode">Subject Code</label>
@@ -213,8 +213,8 @@ if (isset($_GET['delete'])) {
                             <td><?php echo $subject['subjectCode']; ?></td>
                             <td><?php echo $subject['subjectName']; ?></td>
                             <td class="action-buttons">
-                                <a >Edit</a>
-                                <a  class="delete">Delete</a>
+                            <a href="edit.php?edit=<?php echo $index; ?>&subjectCode=<?php echo urlencode($subject['subjectCode']); ?>&subjectName=<?php echo urlencode($subject['subjectName']); ?>">Edit</a>
+                            <a class="delete">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -228,7 +228,7 @@ if (isset($_GET['delete'])) {
     </div>
 </div>
 
-<!-- Bootstrap JS and dependencies -->
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
