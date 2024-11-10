@@ -1,3 +1,13 @@
+<?php
+// Include the functions file
+include('function.php');
+
+// Check if the user is logged in
+check_login();
+
+// Retrieve user email from session using the function
+$user_email = get_user_email();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,8 +69,6 @@
         }
         .card {
             background-color: #fff;
-           
-           
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 700px;
             text-align: center;
