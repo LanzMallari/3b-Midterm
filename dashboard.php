@@ -1,11 +1,11 @@
 <?php
-// Include the functions file
+
 include('function.php');
 
-// Check if the user is logged in
+
 check_login();
 
-// Retrieve user email from session using the function
+
 $user_email = get_user_email();
 ?>
 <!DOCTYPE html>
