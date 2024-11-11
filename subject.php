@@ -11,20 +11,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['deleteSubject'])) {
     $success = deleteSubject($index);
 }
 
-
-
 // Check if the form is submitted to add a new subject
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['deleteSubject'])) {
     $subjectCode = $_POST["subjectCode"] ?? '';
     $subjectName = $_POST["subjectName"] ?? '';
     $result = addSubject($subjectCode, $subjectName);
+    
     if (strpos($result, "successfully")) {
         $success = $result;
+        
+        // Redirect to clear the success message after subject is added
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
     } else {
         $error = $result;
     }
-
-   
 }
 ?>
 
