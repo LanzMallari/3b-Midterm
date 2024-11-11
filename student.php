@@ -1,3 +1,22 @@
+<?php
+include 'function.php';
+
+$error = "";
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['deleteStudent'])) {
+    $index = $_POST['deleteStudent'];
+    deleteStudent($index);
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['deleteStudent'])) {
+    $studentId = $_POST["studentId"] ?? '';
+    $firstName = $_POST["firstName"] ?? '';
+    $lastName = $_POST["lastName"] ?? '';
+    $error = addStudent($studentId, $firstName, $lastName);
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -153,46 +172,62 @@
     </ol>
 </nav>
 
+<?php if (!empty($error)): ?>
+    <div class="error-box"><?php echo $error; ?></div>
+<?php endif; ?>
 
 <div class="container">
     <form action="" method="POST">
         <div class="form-group">
             <label for="studentId">Student ID</label>
-            <input type="text" id="studentId" name="studentId" placeholder="Enter Student ID">
+            <input type="text" id="studentId" name="studentId" placeholder="Enter Student ID" >
         </div>
         <div class="form-group">
             <label for="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" placeholder="Enter First Name">
+            <input type="text" id="firstName" name="firstName" placeholder="Enter First Name" >
         </div>
         <div class="form-group">
             <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name">
+            <input type="text" id="lastName" name="lastName" placeholder="Enter Last Name" >
         </div>
-
-        <div class="form-group">
-            <button type="submit">Register Student</button>
-        </div>
+        <button type="submit" class="btn btn-primary">Register Student</button>
     </form>
 </div>
 
-<div class="student-list-container">
+<div class="student-list-container container">
     <h3>Student List</h3>
-    <div class="student-list">
-        <table>
-            <thead>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($_SESSION['students'])): ?>
+                <?php foreach ($_SESSION['students'] as $index => $student): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($student['studentId']); ?></td>
+                        <td><?php echo htmlspecialchars($student['firstName']); ?></td>
+                        <td><?php echo htmlspecialchars($student['lastName']); ?></td>
+                        <td>
+                            <a href="?edit=<?php echo $index; ?>" class="btn btn-warning btn-sm">Edit</a>
+                            <form method="POST" style="display:inline;">
+                                <input type="hidden" name="deleteStudent" value="<?php echo $index; ?>">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
                 <tr>
-                    <th>Student ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>option</th>
-                    
+                    <td colspan="4">No students found.</td>
                 </tr>
-            </thead>
-            <tbody>
-                
-            </tbody>
-        </table>
-    </div>
+            <?php endif; ?>
+        </tbody>
+    </table>
 </div>
 
 </body>
