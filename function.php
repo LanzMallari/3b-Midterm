@@ -126,4 +126,58 @@ function deleteSubjectByIndex($index) {
     }
   
 }
+// Function to add a new student
+function validateStudentData($student_data) {
+    if (empty($student_data['studentId']) || empty($student_data['firstName']) || empty($student_data['lastName'])) {
+        return "All fields are required.";
+    }
+    return true;
+}
+
+// Helper function to check for duplicate student ID
+function checkDuplicateStudentData($student_data) {
+    if (isset($_SESSION['students'])) {
+        foreach ($_SESSION['students'] as $student) {
+            if ($student['studentId'] === $student_data['studentId']) {
+                return "Student with this ID already exists.";
+            }
+        }
+    }
+    return true;
+}
+function addStudent($studentId, $firstName, $lastName) {
+    $student_data = [
+        'studentId' => $studentId,
+        'firstName' => $firstName,
+        'lastName' => $lastName,
+    ];
+
+    // Validate student data
+    $validation_result = validateStudentData($student_data);
+    if ($validation_result !== true) {
+        return $validation_result;
+    }
+
+    // Check for duplicate student data
+    $duplicate_check = checkDuplicateStudentData($student_data);
+    if ($duplicate_check !== true) {
+        return $duplicate_check;
+    }
+
+    // Add the student to session if validation passes
+    $_SESSION['students'][] = $student_data;
+    return "";
+}
+
+// Function to delete a student by index
+function deleteStudent($index) {
+    if (isset($_SESSION['students'][$index])) {
+        unset($_SESSION['students'][$index]);
+        $_SESSION['students'] = array_values($_SESSION['students']); // Reindex array
+    }
+}
+
+?>
+<?php
+
 ?>
