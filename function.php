@@ -9,11 +9,11 @@ function startSessionIfNotStarted() {
 // Define the users' credentials in an array
 function getUsers() {
     return [
-        ["email" => "example@gmail.com", "password" => "example"],
-        ["email" => "example1@gmail.com", "password" => "example1"],
-        ["email" => "example2@gmail.com", "password" => "example2"],
-        ["email" => "example3@gmail.com", "password" => "example13"],
-        ["email" => "example3@gmail.com", "password" => "example14"]
+        ["email" => "user@gmail.com", "password" => "user"],
+        ["email" => "user1@gmail.com", "password" => "user1"],
+        ["email" => "user2@gmail.com", "password" => "user2"],
+        ["email" => "user3@gmail.com", "password" => "user3"],
+        ["email" => "user4@gmail.com", "password" => "user4"]
     ];
 }
 
