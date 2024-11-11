@@ -1,3 +1,43 @@
+<?php
+session_start();
+
+// Function to update student info
+function updateStudent($index, $firstName, $lastName) {
+    // Check if the student index is valid
+    if (isset($_SESSION['students'][$index])) {
+        // Update the student information
+        $_SESSION['students'][$index]['firstName'] = $firstName;
+        $_SESSION['students'][$index]['lastName'] = $lastName;
+    }
+}
+
+$error = "";
+$student = null;
+
+if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
+    $index = $_GET['edit'];
+    
+    // Retrieve the student info
+    if (isset($_SESSION['students'][$index])) {
+        $student = $_SESSION['students'][$index];
+    } else {
+        $error = "Student not found!";
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $index = $_GET['edit'];
+    $firstName = $_POST["firstName"];
+    $lastName = $_POST["lastName"];
+    
+    // Update the student information
+    updateStudent($index, $firstName, $lastName);
+    
+    // Redirect to the students list after update
+    header("Location: student.php");
+    exit();
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -106,26 +146,30 @@
 <nav aria-label="breadcrumb" class="breadcrumbs">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="students.php">Register Student</a></li>
+        <li class="breadcrumb-item"><a href="student.php">Register Student</a></li>
         <li class="breadcrumb-item active" aria-current="page">Edit Student</li>
     </ol>
 </nav>
+
+<?php if (!empty($error)): ?>
+    <div class="alert alert-danger"><?php echo $error; ?></div>
+<?php endif; ?>
 
 <fieldset style="width: 60%; height: 140px;">
     <form action="" method="POST">
         <div class="form-group">
             <label for="studentId">Student ID</label>
-            <input readonly style="background-color: #e9ecef; color: #6c757d;">
+            <input type="text" id="studentId" name="studentId" value="<?php echo htmlspecialchars($student['studentId']); ?>" readonly style="background-color: #e9ecef; color: #6c757d;">
         </div>
 
         <div class="form-group">
             <label for="firstName">First Name</label>
-            <input  name="firstName" echo $firstName; ? >
+            <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($student['firstName']); ?>" required>
         </div>
 
         <div class="form-group">
             <label for="lastName">Last Name</label>
-            <input  name="lastName"  echo $lastName; ? >
+            <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($student['lastName']); ?>" required>
         </div>
 
         <div class="form-group">

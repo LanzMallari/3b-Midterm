@@ -1,20 +1,51 @@
 <?php
-include 'function.php';
+session_start();
 
-$error = "";
+// Function to add a new student
+function addStudent($studentId, $firstName, $lastName) {
+    // Check if any of the fields are empty
+    if (empty($studentId) || empty($firstName) || empty($lastName)) {
+        return "All fields are required!";
+    }
 
+    // Check if the student ID already exists in the session
+    foreach ($_SESSION['students'] as $student) {
+        if ($student['studentId'] == $studentId) {
+            return "Student ID already exists!";
+        }
+    }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['deleteStudent'])) {
-    $index = $_POST['deleteStudent'];
-    deleteStudent($index);
+    // Add new student
+    $_SESSION['students'][] = [
+        'studentId' => $studentId,
+        'firstName' => $firstName,
+        'lastName'  => $lastName
+    ];
+
+    return "";
 }
 
+// Function to delete a student
+function deleteStudent($index) {
+    if (isset($_SESSION['students'][$index])) {
+        unset($_SESSION['students'][$index]);
+        $_SESSION['students'] = array_values($_SESSION['students']); // Re-index array
+    }
+}
 
+// Handle adding a new student
+$error = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['deleteStudent'])) {
     $studentId = $_POST["studentId"] ?? '';
     $firstName = $_POST["firstName"] ?? '';
     $lastName = $_POST["lastName"] ?? '';
     $error = addStudent($studentId, $firstName, $lastName);
+}
+
+// Handle deleting a student
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['deleteStudent'])) {
+    $index = $_POST['deleteStudent'];
+    deleteStudent($index);
 }
 ?>
 
@@ -213,7 +244,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['deleteStudent'])) {
                         <td><?php echo htmlspecialchars($student['firstName']); ?></td>
                         <td><?php echo htmlspecialchars($student['lastName']); ?></td>
                         <td>
-                            <a href="?edit=<?php echo $index; ?>" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="editstudent.php?edit=<?php echo $index; ?>" class="btn btn-warning btn-sm">Edit</a>
                             <form method="POST" style="display:inline;">
                                 <input type="hidden" name="deleteStudent" value="<?php echo $index; ?>">
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>

@@ -113,6 +113,7 @@ $user_email = get_user_email();
             <p>This section allows you to add a new subject in the system. Click the button below to proceed with the adding process.</p>
             <a href="subject.php">
                 <button>Add Subject</button>
+                
             </a>
         </div>
 
